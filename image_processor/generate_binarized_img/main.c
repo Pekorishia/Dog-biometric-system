@@ -1,56 +1,56 @@
-#include <stdio.h>/**Biblioteca de funções padrão da linguagem C*/
-#include <stdlib.h>/**Biblioteca para uso específico de algumas funções*/
-#include <string.h>/**Biblioteca para uso de strings*/
-#include <ctype.h>/**Biblioteca usada para tratamento de algumas especificidades do programa*/
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <ctype.h>
 #include <vector>
 
-/**Variáveis usadas para alocar largura e altura da matriz*/
-int altura, largura;
+// Variables used to allocate array width and height
+int height, width;
 
-/**Struct com as cores do RGB*/
- typedef struct {
+// Struct with RGB colors
+typedef struct {
     int r;
     int g;
     int b;
 } color;
 typedef color Pixel;
 
-/**
- *Gera um novo aquivo .ppm com as devidas alocações de dados.
+/*
+ * Generates a new .ppm file with the appropriate data allocations.
  */
-void gerar_img (std::vector<std::vector<Pixel>> imagem, char saida[]){
+void create_img (std::vector<std::vector<Pixel>> image, char output[]){
 
-    strcat(saida, ".ppm");
-    FILE * arq_imagem;
+    strcat(output, ".ppm");
+    FILE * image_file;
     
-    arq_imagem = fopen(saida, "w");
+    image_file = fopen(output, "w");
 
-    fprintf(arq_imagem, "P3\n");
-    fprintf(arq_imagem, "%i %i\n%i\n",largura, altura, 255);
+    fprintf(image_file, "P3\n");
+    fprintf(image_file, "%i %i\n%i\n",width, height, 255);
 
     int i, j;
-    for(i = 0; i < altura; i++){
-        for(j = 0; j < largura; j++){
-            fprintf(arq_imagem, "%i %i %i\n", imagem[i][j].r, imagem[i][j].g, imagem[i][j].b);
+    for(i = 0; i < height; i++){
+        for(j = 0; j < width; j++){
+            fprintf(image_file, "%i %i %i\n", image[i][j].r, image[i][j].g, image[i][j].b);
         }
     }    
-    fclose(arq_imagem);
+    fclose(image_file);
 }
 
-/**
- *Realiza a binarização da imagem passada com base no threshold informado
+/*
+ * Performs binarization of the last image based on the threshold informed
  */
-std::vector<std::vector<Pixel>> binarization(std::vector<std::vector<Pixel>> imagem, int thr){
-    std::vector<std::vector<Pixel>> copy(altura);
-    for ( int i = 0 ; i < altura ; i++ )
-        copy[i].resize(largura);
+std::vector<std::vector<Pixel>> binarization(std::vector<std::vector<Pixel>> image, int thr){
+    std::vector<std::vector<Pixel>> copy(height);
+    for ( int i = 0 ; i < height ; i++ )
+        copy[i].resize(width);
 
-    copy = imagem;
+    copy = image;
     int bin = 0;
     int i, j;
 
-    for(i=0; i < altura; i++){
-        for(j=0;j < largura;j++){
+    for(i=0; i < height; i++){
+        for(j=0;j < width;j++){
             
             bin  = (copy[i][j].r + copy[i][j].g + copy[i][j].b)/3;
 
@@ -69,44 +69,38 @@ std::vector<std::vector<Pixel>> binarization(std::vector<std::vector<Pixel>> ima
     return copy;
 }
 
-/**
- *Metodo main onde é carregado o arquivo, mandado para binarizar e salvo em um arquivo .ppm de saida
+/*
+ * Method main where the file is loaded, sent to binarize and saved in an output .ppm file
  */
 int main(int argc, char** argv) {   
     
-    FILE *arquivo;
+    FILE *file;
 
-    /**Ler o arquivo*/
-    arquivo = fopen(argv[1], "r");
+    // Read the file
+    file = fopen(argv[1], "r");
     
-    /**Faz o teste de erro na abertura do arquivo*/
-    /*if(arquivo == NULL){
-        printf("%s\n","Erro ao abrir o arquivo de imagem.");
-    }else{
-        printf("%s\n","Arquivo de imagem aberto com sucesso."); 
-    }*/
+    // Read the header data
+    fscanf(file, "P3 %i %i 255",&width, &height);
     
-    /**Ler os dados do cabeçalho*/
-    fscanf(arquivo, "P3 %i %i 255",&largura, &altura);
-    
-    /**Cria uma matriz de Pixels*/
-    std::vector<std::vector<Pixel>> imagem(altura);
-    for ( int i = 0 ; i < altura ; i++ )
-        imagem[i].resize(largura);
+    // Creates a matrix of Pixels
+    std::vector<std::vector<Pixel>> image(height);
+    for ( int i = 0 ; i < height ; i++ )
+        image[i].resize(width);
 
-    /**Ler cada Pixel alocando na variável referente ao struct*/
-    for (int i = 0; i < altura; i++)
-        for(int j = 0; j < largura; j++)
-            fscanf(arquivo, "%i %i %i", &imagem[i][j].r, &imagem[i][j].g, &imagem[i][j].b);
+    // Read each pixel by allocating in the variable referring to the struct
+    for (int i = 0; i < height; i++)
+        for(int j = 0; j < width; j++)
+            fscanf(file, "%i %i %i", &image[i][j].r, &image[i][j].g, &image[i][j].b);
 
-    /**fecha o arquivo*/
-    fclose(arquivo);
+    // Close the file
+    fclose(file);
  
-    /**Chama o filtro da binarização*/
-    imagem = binarization(imagem, atoi(argv[2]));
-    gerar_img(imagem, argv[3]);
-    //printf("%s\n", "Imagem binarizada com sucesso.");     
+    // Calls the binarization filter
+    image = binarization(image, atoi(argv[2]));
+    create_img(image, argv[3]);
+
+    //printf("%s\n", "image binarized successfully!");     
     
-    /**Finaliza o programa*/
+    // Finish the program
     return (EXIT_SUCCESS);
 }

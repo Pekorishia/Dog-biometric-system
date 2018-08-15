@@ -8,5 +8,5 @@ echo "Start binarization" &&
 echo "Start shape detection" &&
 ./run_shape_detector.sh $DIR $ID &&
 
-echo "done make." &&
+echo "done make without image conversion." &&
 exit 0	
