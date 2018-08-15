@@ -104,7 +104,7 @@ cv2.drawContours(image, cnts, padBorder, (0, 255, 0), 2)
 
 # get the first element of the contours
 # it will be the referential contour of the image
-elem = scp[1]
+elem = scp[padBorder]
 
 # create the array that will have the closest distance between the shapes and the 
 # referential element
@@ -126,15 +126,15 @@ for compelem in scp:
 
 
 # open a .txt file
-#file = open(args["outFile"], "w")
+file = open(args["outFile"], "w")
 
 # write the representative vector
-# vector format: centerX, centerY, perimeter, nearest triangle, nearest square, 
+# vector format: perimeter, area, nearest triangle, nearest square, 
 #				 nearest rectangle, nearest pentagon, nearest unidentified and label
-#file.write( str(elem[1][0]) + ','+ str(elem[1][1]) + ',' + str(elem[2]) + ',' + str(globaldist["triangle"]) + "," + str(globaldist["square"]) + "," + str(globaldist["rectangle"]) + "," + str(globaldist["pentagon"]) + "," + str(globaldist["unidentified"]) + "," + str(args["label"]));
+file.write( str(elem[2]) + ',' + str(elem[3]) + ',' + str(globaldist["triangle"]) + "," + str(globaldist["square"]) + "," + str(globaldist["rectangle"]) + "," + str(globaldist["pentagon"]) + "," + str(globaldist["unidentified"]) + "," + str(args["label"]));
 
 # close the .txt file
-#file.close() 
+file.close() 
 
 # save the output image
 cv2.imwrite(args["outImage"], image)
