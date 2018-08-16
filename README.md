@@ -1,4 +1,4 @@
-# Dog reccognition based on their pawprints
+# NONE
 
 //TODO
 
