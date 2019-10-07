@@ -1,6 +1,6 @@
-# NONE
+# Dog Biometric System
 
-//TODO
+A system that binarizes the paw pads images, extracts their minutias and classifies each image based on their similar features.
 
 ## Getting Started
 
@@ -10,6 +10,7 @@
 
 - Python 3
 - OpenCV
+- Linux based OS
 
 ### Installing
 
